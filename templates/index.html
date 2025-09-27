@@ -1,0 +1,84 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Gunny Bag Counter</title>
+    <style>
+        body { font-family: sans-serif; margin: 2em; background-color: #f4f4f9; }
+        .container { max-width: 1200px; margin: auto; background: white; padding: 2em; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        h1, h2 { text-align: center; color: #333; }
+        #controls, #config-area, #processing-area { margin-bottom: 2em; border: 1px solid #ddd; padding: 1.5em; border-radius: 5px; }
+        #canvas-container { position: relative; width: fit-content; margin: auto; }
+        #setup-canvas { border: 2px solid black; background-color: #eee; cursor: crosshair; }
+        
+        /* --- MODIFIED CODE IS HERE --- */
+        #video-stream {
+            /* Set a maximum width. You can change 800px to your desired size (e.g., 720px, 640px) */
+            max-width: 800px;
+            width: 100%; /* This keeps it responsive on smaller screens */
+            height: auto;
+            border: 1px solid #ccc;
+            /* Add these two lines to center the video */
+            display: block;
+            margin: auto;
+        }
+        /* --- END OF MODIFIED CODE --- */
+
+        .hidden { display: none; }
+        button { padding: 10px 15px; border: none; background-color: #007bff; color: white; border-radius: 5px; cursor: pointer; }
+        button:disabled { background-color: #ccc; cursor: not-allowed; }
+        #status { font-weight: bold; color: #dc3545; text-align: center; margin-top: 1em; }
+        #count-display { font-size: 2.5em; color: #28a745; }
+        .radio-group { margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Gunny Bag Loading/Unloading Counter</h1>
+
+        <!-- Step 1: Upload -->
+        <div id="controls">
+            <h2>Step 1: Upload Video</h2>
+            <input type="file" id="video-upload" accept="video/*">
+        </div>
+
+        <!-- Step 2: Configuration -->
+        <div id="config-area" class="hidden">
+            <h2>Step 2: Configure Analysis Area</h2>
+            <p><strong>Instructions:</strong>
+                <ol>
+                    <li>(Optional) Select "Process Part of Video" and draw the blue ROI rectangle.</li>
+                    <li>Draw the <strong>red counting line</strong>.</li>
+                    <li>Draw the <strong>green arrow</strong> to indicate the direction of movement to count.</li>
+                    <li>Click 'Start Analysis'.</li>
+                </ol>
+            </p>
+            
+            <div class="radio-group">
+                <label><input type="radio" name="process-mode" value="full" checked> Process Full Video</label>
+                <label><input type="radio" name="process-mode" value="roi"> Process Part of Video (Draw ROI)</label>
+            </div>
+
+            <div id="canvas-container">
+                <canvas id="setup-canvas"></canvas>
+            </div>
+            <div style="text-align:center; margin-top: 1em;">
+                <button id="reset-drawings-btn">Reset Drawings</button>
+                <button id="start-btn" disabled>Start Analysis</button>
+            </div>
+        </div>
+        
+        <!-- Step 3: Processing -->
+        <div id="processing-area" class="hidden">
+            <h2>Step 3: Analysis in Progress</h2>
+            <h2 id="count-display">Count: 0</h2>
+            <img id="video-stream" src="" alt="Video Stream">
+            <div id="status"></div>
+        </div>
+    </div>
+
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+    <script src="/static/js/main.js"></script>
+</body>
+</html>
